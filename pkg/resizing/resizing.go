@@ -1,3 +1,4 @@
+// Package resizing includes common methods for resizing images.
 package resizing
 
 import (
@@ -9,12 +10,14 @@ import (
 	"github.com/discordapp/lilliput"
 )
 
+// Default encoding options for different filetypes.
 var EncodeOptions = map[string]map[int]int{
-	".jpeg": map[int]int{lilliput.JpegQuality: 85},
-	".png":  map[int]int{lilliput.PngCompression: 7},
-	".webp": map[int]int{lilliput.WebpQuality: 85},
+	".jpeg": {lilliput.JpegQuality: 85},
+	".png":  {lilliput.PngCompression: 7},
+	".webp": {lilliput.WebpQuality: 85},
 }
 
+// Resizes images provided in a byte array to the specified outputWidth and outputHeight.
 func ResizeImage(inputBuf []byte, outputWidth int, outputHeight int) ([]byte, error) {
 	// The decoder instantiation performs some basic checks,
 	// such as magic bytes checking to match some known formats.
@@ -35,17 +38,14 @@ func ResizeImage(inputBuf []byte, outputWidth int, outputHeight int) ([]byte, er
 		fmt.Printf("duration: %.2f s\n", float64(decoder.Duration())/float64(time.Second))
 	}
 
-	// get ready to resize image,
-	// using 8192x8192 maximum resize buffer size
 	ops := lilliput.NewImageOps(8192)
 	defer ops.Close()
 
-	// Create a buffer to store the output image.
+	var outputImg []byte
+
 	// If shrinking the file, use a buffer the size of the original image.
 	// If increasing the size, use a maximum of 50MB.
 	// This is done to try and conserve memory allocations.
-	var outputImg []byte
-
 	if header.Width() > outputWidth || header.Height() > outputHeight {
 		outputImg = make([]byte, 50*1024*1024)
 	} else {
@@ -64,6 +64,7 @@ func ResizeImage(inputBuf []byte, outputWidth int, outputHeight int) ([]byte, er
 	if outputWidth == header.Width() && outputHeight == header.Height() {
 		resizeMethod = lilliput.ImageOpsNoResize
 	}
+
 	outputType := "." + strings.ToLower(decoder.Description())
 
 	opts := &lilliput.ImageOptions{
