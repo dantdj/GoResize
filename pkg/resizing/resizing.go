@@ -3,7 +3,6 @@ package resizing
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -24,14 +23,14 @@ func ResizeImage(inputBuf []byte, outputWidth int, outputHeight int) ([]byte, er
 	decoder, err := lilliput.NewDecoder(inputBuf)
 	if err != nil {
 		fmt.Printf("Failed to decode image: %s\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 	defer decoder.Close()
 
 	header, err := decoder.Header()
 	if err != nil {
 		fmt.Printf("Failed to read image header: %s\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	if decoder.Duration() != 0 {
@@ -79,8 +78,8 @@ func ResizeImage(inputBuf []byte, outputWidth int, outputHeight int) ([]byte, er
 	outputImg, err = ops.Transform(decoder, opts, outputImg)
 	if err != nil {
 		fmt.Printf("Failed to transform image, %s\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return outputImg, err
+	return outputImg, nil
 }

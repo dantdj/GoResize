@@ -19,7 +19,10 @@ func ResizeHandler(ctx echo.Context) error {
 
 	bytes, _ := ioutil.ReadAll(image)
 
-	resized, _ := resizing.ResizeImage(bytes, newWidth, newHeight)
+	resized, err := resizing.ResizeImage(bytes, newWidth, newHeight)
+	if err != nil {
+		return ctx.NoContent(500)
+	}
 
 	return ctx.Blob(200, "image/png", resized)
 }
