@@ -5,9 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func ServerRoutes() *echo.Echo {
-	e := echo.New()
-
+func UseRoutes(e *echo.Echo) *echo.Echo {
 	e.GET("/health", handlers.HealthCheckHandler)
 	e.POST("/resize", handlers.ResizeHandler)
 
