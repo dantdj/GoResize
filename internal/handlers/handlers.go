@@ -10,14 +10,14 @@ import (
 )
 
 func ResizeHandler(ctx echo.Context) error {
-	image, _ := ctx.FormFile("file")
+	formData, _ := ctx.FormFile("file")
 	newWidth, _ := strconv.Atoi(ctx.QueryParam("width"))
 	newHeight, _ := strconv.Atoi(ctx.QueryParam("height"))
 
-	src, _ := image.Open()
-	defer src.Close()
+	image, _ := formData.Open()
+	defer image.Close()
 
-	bytes, _ := ioutil.ReadAll(src)
+	bytes, _ := ioutil.ReadAll(image)
 
 	resized, _ := resizing.ResizeImage(bytes, newWidth, newHeight)
 

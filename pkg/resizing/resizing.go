@@ -23,7 +23,7 @@ func ResizeImage(inputBuf []byte, outputWidth int, outputHeight int) ([]byte, er
 	// such as magic bytes checking to match some known formats.
 	decoder, err := lilliput.NewDecoder(inputBuf)
 	if err != nil {
-		fmt.Printf("Failed to decode imge: %s\n", err)
+		fmt.Printf("Failed to decode image: %s\n", err)
 		os.Exit(1)
 	}
 	defer decoder.Close()
